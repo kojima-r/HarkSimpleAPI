@@ -1,0 +1,153 @@
+<html>
+    <head>
+        <title>Project list</title>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link type="text/css" rel="stylesheet"
+  href="//code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
+<script type="text/javascript"
+  src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript"
+  src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+    </head>
+    <body>
+        <h1>New Project </h1>
+	<a href="index.html">project list</a>
+        <h2>Upload wav file</h2>
+	<form id="wav_form" >
+		wav file: <input name="files" type="file" />
+		<button type="button" onclick="wavfile_upload()">upload</button>
+	</form>
+        <h2>Create new project</h2>
+	<form id="pj_form" >
+		<ul>
+		<li>project name: <input name="name" type="text" value="pj1"></input></li>
+		<li>target: <span id="target_area"></span></li>
+		<li>tf    : <span id="tf_area"></span></li>
+		<li>threshold: <input name="thresh" type="text" value="29"></input></li>
+		<button type="button" onclick="create_pj()">create</button>
+	</form>
+<div id="dialog" class="jquery-ui-dialog" title="wait for processing" style="display:none;">
+<textarea id="dialog_log" name="log" rows="10" cols="42"></textarea>
+</div>
+
+
+	
+
+    </body>
+
+<script type="text/javascript">
+function wavfile_upload(){
+ 	var formdata = new FormData($('#wav_form').get(0));
+	console.log(formdata);
+	$.ajax({
+		url  : "/upload/wav",
+		type : "POST",
+		data : formdata,
+		cache       : false,
+		contentType : false,
+		processData : false,
+		dataType    : "json"
+	    })
+	    .done(function(data, textStatus, jqXHR){
+		console.log(data);
+	    })
+	    .fail(function(jqXHR, textStatus, errorThrown){
+		alert("failed to upload");
+	    });
+}
+
+function create_pj(){
+ 	var formdata = new FormData($('#pj_form').get(0));
+	console.log(formdata);
+	$.ajax({
+		url  : "/run/create_pj",
+		type : "POST",
+		data : formdata,
+		cache       : false,
+		contentType : false,
+		processData : false,
+		dataType    : "json"
+	    })
+	    .done(function(data, textStatus, jqXHR){
+		console.log(data);
+
+		console.log($("#dialog"))
+	    	$( "#dialog" ).dialog({ autoOpen: false,
+			    		height: 300,
+			           	width: 450,
+			    		});
+		$( "#dialog" ).dialog("open");
+		var target_wid=data["worker_id"]
+		var id = setInterval(function(){
+			$.getJSON('/status/'+target_wid).done(
+			function(data){
+				console.log(data);
+				if(data["log"]){
+					$("#dialog_log").text(data["log"].join("\r\n"))
+				}
+				var psconsole = $('#dialog_log');
+				psconsole.scrollTop(
+					psconsole[0].scrollHeight - psconsole.height()
+				);
+				if(data["status"]!="running"){
+					clearInterval(id);
+					$( "#dialog" ).dialog( "close" );
+					$( "#ext_area" ).show();
+					$( "#ext_path").empty();
+					var t ='<a href="/data1/'+target_wid+'.zip">'+target_wid+'.zip</a>';
+					$("#ext_path").append(t);
+				}
+			}).fail(function(err){
+				console.log(err);
+			})
+			}, 1000);
+	    })
+	    .fail(function(jqXHR, textStatus, errorThrown){
+		alert("failed to upload");
+	    });
+}
+$(function () {
+
+
+	
+var list_tf=null
+var list_wav=null
+function update_list(){
+	$.getJSON('/list/tf').done(
+		function(data){
+			list_tf=data;
+			update_tf_list();
+			console.log(data);
+		}).fail(function(err){
+			console.log(err);
+		})
+	$.getJSON('/list/wav').done(
+		function(data){
+			list_wav=data;
+			update_wav_list();
+			console.log(data);
+		}).fail(function(err){
+			console.log(err);
+		})
+}
+function update_wav_list(){
+	$("#target_area").empty()
+	var t ='<select id="target_file" name="target"></select>';
+	$("#target_area").append(t);
+	$.each(list_wav,function(i,el){
+		$("#target_area #target_file").append("<option>"+el+"</option>");
+	})
+}
+function update_tf_list(){
+	$("#tf_area").empty()
+	var t ='<select id="tf_file" name="tf"></select>';
+	$("#tf_area").append(t);
+	$.each(list_tf,function(i,el){
+		$("#tf_area #tf_file").append("<option>"+el+"</option>");
+	})
+}
+update_list();
+
+})
+	</script>
+</html>

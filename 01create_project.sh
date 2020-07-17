@@ -1,0 +1,29 @@
+#org_work=/export/kojima/birds/birds_suzuki/localized_int_furu_0505_140_init1min2
+#work=/export/kojima/birds/birds_suzuki/localized_20150409_134604
+#main=/home/kojima/Service/WebAnnotationToolForBirds
+#project=sample3
+#target=audio/20150409-134604.wav
+if [ $# != 1 ]; then
+	echo "引数の数が間違っています！"
+	exit 1
+fi
+name=$1
+. config/config_${name}.sh
+
+#o=/tmp/birds_txt
+
+cp -r ${org_work} ${work}
+ln -s ${main}/tf/${hark_tf} ${work}/${hark_tf}
+#cp ${target} ${work}/original.wav
+sox ${target} -r 16000 -b 16 -e signed-integer ${work}/original.wav
+
+mkdir -p ./public/${project}
+sox ${target} -r 16000 -c 1 -b 16 -e signed-integer ./public/${project}/original.wav
+
+sh scripts/get_audio_info.sh ./public/${project}/original.wav >./public/${project}/original.json
+cp config.sh ./public/${project}/config
+mkdir -p ./public/${project}/sep_files                                    
+
+
+
+

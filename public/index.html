@@ -1,0 +1,89 @@
+<html>
+    <head>
+        <title>Project list</title>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link type="text/css" rel="stylesheet"
+  href="//code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
+<script type="text/javascript"
+  src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript"
+  src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+    </head>
+    <body>
+        <h1>Project list</h1>
+	<a href="new.html">new project</a>
+<button id="reload_button">reload</button>
+<div id="pj_table"></div>
+
+
+<div id="dialog" title="config">
+</div>
+<!--
+<p>デフォルト<br>
+<form method="post" action="/edit" enctype="multipart/form-data">
+<input type="file" name="example1"></p>
+<p><input type="submit" value="送信する"></p>
+</form>
+-->
+<!-- ***************************** -->
+<script type="text/javascript">
+$(function(){
+$("#reload_button").click(function(){
+	$.get("/list/project", function(data){
+		console.log(data)
+		var tableJQ = $('<table boader=1>');
+		$('<tr><th>Projects</th><th>config</th><th>Log</th></tr>').appendTo(tableJQ);
+		for (var r = 0; r < data.length ; r++) {
+			var trJQ_r = $('<tr></tr>').appendTo(tableJQ);
+			$('<td>' + data[r] + '</td>').appendTo(trJQ_r);
+			$('<td><button id="'+data[r]+'">config</td>').appendTo(trJQ_r);
+			$('<td><a href="'+data[r]+'/log.txt">log</a></td>').appendTo(trJQ_r);
+		}
+		$('#pj_table').empty();
+		$('#pj_table').append(tableJQ);
+		// config event
+		for (var r = 0; r < data.length ; r++) {
+			var pj_id=data[r]
+			$("#"+pj_id).on("click",function(){
+				console.log(this);
+				// config dialog
+				$.get("./"+pj_id+"/config", function(data){
+					console.log(data)
+					var arr = data.split(/\r\n|\r|\n/);
+					var str="";
+					for(var i=0;i<arr.length;i++){
+						if(! arr[i]==""){
+							if(! arr[i].match(/^#/)){
+							//if(arr[i].match(/^hark/)){
+							str+=arr[i]+"<br>\r\n"
+							//}
+							}
+						}
+					}
+					console.log("Data Loaded: " + str);
+					$("#dialog").attr("title",pj_id);
+					$("#dialog").html(str);
+					$("#dialog").dialog({autoOpen: false,width:500,height:600,position:"center top",modal: true});
+					$('#dialog').dialog('open');
+				});
+			})
+			
+		}
+	});
+});
+$("#testte").on("click",function(){
+	console.log(this);
+	$.get("/anno_bird/project/config", function(data){
+		
+	});
+});
+$( document ).on( "click", ".ui-widget-overlay", function(){
+    $(this).next().find(".ui-dialog-content").dialog("close");
+	} );
+
+});
+
+</script>
+
+    </body>
+</html>
