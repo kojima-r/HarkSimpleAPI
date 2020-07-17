@@ -48,6 +48,7 @@ docker run -it --rm -v ~/HarkSimpleAPI:/hark_api --entrypoint "bash" hark:latest
 ```
 
 実行結果
+=======
 実行すると以下に保存されるので直接URLを指定すればダウンロード・アクセス可能
 - public/<プロジェクト名>/log.txt：実行ログ
 - public/<プロジェクト名>/original_1ch.wav：1ch分の録音データ
