@@ -27,8 +27,7 @@
 -->
 <!-- ***************************** -->
 <script type="text/javascript">
-$(function(){
-$("#reload_button").click(function(){
+function reload(){
 	$.get("/list/project", function(data){
 		console.log(data)
 		var tableJQ = $('<table boader=1>');
@@ -70,6 +69,11 @@ $("#reload_button").click(function(){
 			
 		}
 	});
+}
+$(function(){
+reload();
+$("#reload_button").click(function(){
+	reload();
 });
 $("#testte").on("click",function(){
 	console.log(this);

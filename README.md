@@ -24,4 +24,19 @@ python app.py
 `localhost:8080`
 にアクセス
 
+Docker
+=======
+ビルド
+```
+docker build -t hark:latest .
+```
 
+実行
+```
+docker run -it --rm -v ~/HarkSimpleAPI:/hark_api -p 9010:8080 hark:latest^
+```
+
+デバッグ等
+```
+docker run -it --rm -v ~/HarkSimpleAPI:/hark_api --entrypoint "bash" hark:latest"
+```

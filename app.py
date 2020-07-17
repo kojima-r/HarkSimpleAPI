@@ -1,4 +1,3 @@
-# Flask などの必要なライブラリをインポートする
 from flask import Flask, render_template, request, redirect, url_for,make_response,jsonify
 import numpy as np
 import os
@@ -21,7 +20,6 @@ def calculate_key(filename):
     return saveFileName
 
 
-# 自身の名称を app という名前でインスタンス化する
 
 template_dir = os.path.abspath('view')
 app = Flask(__name__,template_folder=template_dir)
@@ -99,6 +97,6 @@ def list_project():
     return make_response(jsonify(files_dir))
 
 if __name__ == '__main__':
-    #app.debug = True # デバッグモード有効化
-    app.run(host='0.0.0.0',port=8080) # どこからでもアクセス可能に
+    #app.debug = True
+    app.run(host='0.0.0.0',port=8080)
 

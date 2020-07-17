@@ -1,2 +1,4 @@
+#!/bin/sh
+cd `dirname $0`
+python app.py
 
-ruby -Ku myapp.rb -o 0.0.0.0
