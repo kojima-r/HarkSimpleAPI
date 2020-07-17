@@ -27,8 +27,9 @@
 -->
 <!-- ***************************** -->
 <script type="text/javascript">
+var endpoint="/hark_api"
 function reload(){
-	$.get("/list/project", function(data){
+	$.get(endpoint+"/list/project", function(data){
 		console.log(data)
 		var tableJQ = $('<table boader=1>');
 		$('<tr><th>Projects</th><th>config</th><th>Log</th></tr>').appendTo(tableJQ);
@@ -77,7 +78,7 @@ $("#reload_button").click(function(){
 });
 $("#testte").on("click",function(){
 	console.log(this);
-	$.get("/anno_bird/project/config", function(data){
+	$.get("./project/config", function(data){
 		
 	});
 });

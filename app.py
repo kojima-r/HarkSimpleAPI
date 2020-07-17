@@ -28,13 +28,14 @@ app.register_blueprint(data.public_data)
 
 worker={}
 latest_setting={}
-app_base_name="/public"
-@app.route('/')
+app_base_name=""
+public_path="/hark_api/public/index.html"
+@app.route(app_base_name+'/')
 def index():
-    return redirect(app_base_name+"/index.html")
+    return redirect(public_path)
 
 
-@app.route('/run/create_pj', methods=['GET','POST'])
+@app.route(app_base_name+'/run/create_pj', methods=['GET','POST'])
 def post_run_create_pj():
     global worker
     if request.method == 'POST':
@@ -54,7 +55,7 @@ def post_run_create_pj():
     return make_response(jsonify({'worker_id':name}))
 
 UPLOAD_WAV_DIR="./audio/"
-@app.route('/upload/wav', methods=['POST'])
+@app.route(app_base_name+'/upload/wav', methods=['POST'])
 def post_wav_up():
     print("===")
     print(request)
@@ -70,7 +71,7 @@ def post_wav_up():
         #return make_response(jsonify({'result':wid}))
         return make_response(jsonify({'result':name}))
 
-@app.route('/status/<wid>', methods=['GET'])
+@app.route(app_base_name+'/status/<wid>', methods=['GET'])
 def status(wid=None):
     print(worker)
     if wid not in worker or  worker[wid] is None:
@@ -81,15 +82,15 @@ def status(wid=None):
     worker[wid]=None
     return make_response(jsonify({'worker_id':wid,'status':"finished"}))
 
-@app.route('/list/wav', methods=['GET'])
+@app.route(app_base_name+'/list/wav', methods=['GET'])
 def list_wav():
     l=glob.glob(UPLOAD_WAV_DIR+"*.wav")
     return make_response(jsonify(l))
-@app.route('/list/tf', methods=['GET'])
+@app.route(app_base_name+'/list/tf', methods=['GET'])
 def list_tf():
     l=glob.glob("./tf/*.zip")
     return make_response(jsonify(l))
-@app.route('/list/project', methods=['GET'])
+@app.route(app_base_name+'/list/project', methods=['GET'])
 def list_project():
     path="public/"
     files = os.listdir(path)

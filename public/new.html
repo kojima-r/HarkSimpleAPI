@@ -36,11 +36,12 @@
     </body>
 
 <script type="text/javascript">
+var endpoint="/hark_api"
 function wavfile_upload(){
  	var formdata = new FormData($('#wav_form').get(0));
 	console.log(formdata);
 	$.ajax({
-		url  : "/upload/wav",
+		url  : endpoint+"/upload/wav",
 		type : "POST",
 		data : formdata,
 		cache       : false,
@@ -60,7 +61,7 @@ function create_pj(){
  	var formdata = new FormData($('#pj_form').get(0));
 	console.log(formdata);
 	$.ajax({
-		url  : "/run/create_pj",
+		url  : endpoint+"/run/create_pj",
 		type : "POST",
 		data : formdata,
 		cache       : false,
@@ -79,7 +80,7 @@ function create_pj(){
 		$( "#dialog" ).dialog("open");
 		var target_wid=data["worker_id"]
 		var id = setInterval(function(){
-			$.getJSON('/status/'+target_wid).done(
+			$.getJSON(endpoint+'/status/'+target_wid).done(
 			function(data){
 				console.log(data);
 				if(data["log"]){
@@ -113,7 +114,7 @@ $(function () {
 var list_tf=null
 var list_wav=null
 function update_list(){
-	$.getJSON('/list/tf').done(
+	$.getJSON(endpoint+'/list/tf').done(
 		function(data){
 			list_tf=data;
 			update_tf_list();
@@ -121,7 +122,7 @@ function update_list(){
 		}).fail(function(err){
 			console.log(err);
 		})
-	$.getJSON('/list/wav').done(
+	$.getJSON(endpoint+'/list/wav').done(
 		function(data){
 			list_wav=data;
 			update_wav_list();

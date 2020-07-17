@@ -25,5 +25,7 @@ RUN cd ~/ && \
 
 ENV PATH /root/anaconda3/bin:$PATH
 RUN conda install flask 
+RUN apt-get install -y hark-python3 python3-numpy python3-matplotlib
+RUN apt-get install -y sox
 ENTRYPOINT bash /usr/hark/setup.sh && tail -f /dev/null
 
