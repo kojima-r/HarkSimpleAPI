@@ -29,7 +29,8 @@ app.register_blueprint(data.public_data)
 worker={}
 latest_setting={}
 app_base_name=""
-public_path="/hark_api/public/index.html"
+public_path="/public/index.html"
+#public_path="/hark_api/public/index.html"
 @app.route(app_base_name+'/')
 def index():
     return redirect(public_path)
